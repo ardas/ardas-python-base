@@ -30,7 +30,7 @@ async def get_all_users(request: web.Request) -> web.Response:
     users = await request.app['pg'].fetch(user_table.select())
     result = [row_to_dict(user_table, user) for user in users]
 
-    return web.Response(status=200, content_type='appication/json',
+    return web.Response(status=200, content_type='application/json',
                         body=json.dumps(result))
 
 
@@ -64,7 +64,7 @@ async def patch_user(request: web.Request, body) -> web.Response:
             content_type='application/json')
     
     if request.auth_user['user_id'] != user_id:
-        raise web.HTTPUnauthorized(body=json.dumps({'error': 'Access denied for requested resource'}),
+        raise web.HTTPForbidden(body=json.dumps({'error': 'Access denied for requested resource'}),
                                    content_type='application/json')
     
     if not body:

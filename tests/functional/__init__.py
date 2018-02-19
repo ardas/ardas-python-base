@@ -10,6 +10,8 @@ sys.path.insert(0, path_to_application)
 from app.app import create_app
 from app.utils import get_test_config, migrate, drop_tables
 
+AUTH_ERROR = {'error': 'Access denied for requested resource'}
+
 
 class TestCase(AioHTTPTestCase):
 
