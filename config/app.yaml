@@ -1,0 +1,10 @@
+VERSION: 0.0.1
+HOST: localhost
+PORT: 5000
+DB_HOST: localhost
+DB_PORT: 5432
+DB_NAME: app
+DB_USER: user
+SECRET_KEY: secret
+DB_PASSWORD: user
+PROD: false

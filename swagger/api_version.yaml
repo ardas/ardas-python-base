@@ -1,0 +1,14 @@
+  tags:
+  - default
+  summary: Get API version
+  description: This can be done by anyone.
+  produces:
+  - application/json
+  responses:
+    200:
+      description: succes operation
+      schema:
+        properties:
+          version:
+            type: string
+            example: 0.0.1

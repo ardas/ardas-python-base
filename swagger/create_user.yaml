@@ -1,0 +1,65 @@
+tags:
+- user
+summary: Create new user
+description: This can be done by anyone.
+consumes:
+- application/json
+produces:
+- application/json
+parameters:
+  - in: body
+    name: body
+    description: Data that need for creatre user
+    required: true
+    schema:
+      required:
+      - login
+      - password
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+          format: password
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+      example:
+        login: user
+        password: user 
+        first_name: Black
+        last_name: John
+        email: johnblack@gmail.com
+responses:
+  200:
+    description: success operation
+    schema:
+      properties:
+        login:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        id:
+          type: integer
+      example:
+        login: user
+        first_name: Black
+        last_name: John
+        email: johnblack@gmail.com
+        id: 1
+  409: 
+    description: conflict with the current state of the target resource
+    schema:
+      properties:
+        error:
+          type: string
+          example: User with login <login> already exist

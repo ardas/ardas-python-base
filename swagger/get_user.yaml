@@ -1,0 +1,41 @@
+tags:
+- user
+summary: Display user data by id
+description: This can be done by authorized user.
+produces:
+- application/json
+parameters: 
+  - in: path
+    name: user_id
+    description: ID of the user
+    required: true
+    type: integer
+responses:
+  200:
+    description: success operation
+    schema:
+      properties:
+        login:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        id:
+          type: integer
+      example:
+        login: user
+        first_name: Black
+        last_name: John
+        email: johnblack@gmail.com
+        id: 1
+  403:
+    description: access denied
+    schema:
+      properties:
+        error:
+          type: string
+          example: Access denied for requested resource

@@ -1,0 +1,41 @@
+tags: 
+- auth
+summary: Login user
+description: This can be done by anyone.
+consumes:
+- application/json
+produces:
+- application/json
+parameters:
+  - in: body
+    name: body
+    description: Data need for login user
+    required: true
+    schema:
+      required:
+      - login
+      - password
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+          format: password
+      example:
+        login: user
+        password: user
+responses:
+  200:
+    description: success operation
+    schema:
+      properties:
+        user_id:
+          type: integer
+          example: 1
+  401:
+    description: access denied
+    schema: 
+      properties:
+        error:
+          type: string
+          example: Invalid username / password combination

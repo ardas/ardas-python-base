@@ -1,0 +1,21 @@
+tags:
+- auth
+summary: Logout user
+description: This can be done by authorized user
+produces:
+- application/json
+responses:
+  200:
+    description: success operation
+    schema:
+      properties:
+        status:
+          type: string
+          example: Ok
+  403:
+    description: access denied
+    schema:
+      properties:
+        error:
+          type: string
+          example: Access denied for requested resource
