@@ -4,8 +4,8 @@ from . import TestCase, AUTH_ERROR
 from app.models import User
 
 
-user_create_data = {'login': 'test_user', 'password': 'test'}
-user_check_data = {'login': 'test_user', 'id': 1, 'first_name': None, 'last_name': None, 'email': None}
+user_create_data = {'login': 'test_user', 'password': 'test', 'email': 'test@email.com'}
+user_check_data = {'login': 'test_user', 'user_id': 1, 'first_name': None, 'last_name': None, 'email': 'test@email.com'}
 AUTH_ERROR = {'error': 'Access denied for requested resource'}
 
 class TestUserView(TestCase):
@@ -14,6 +14,7 @@ class TestUserView(TestCase):
         user_data = {
             'login': user_create_data['login'] if not login else login,
             'password': user_create_data['password'],
+            'email': user_create_data['email'],
         }
         async with self.app['pg'].transaction() as conn:
             await conn.fetch(User.insert().values(**user_data))
@@ -25,8 +26,9 @@ class TestUserView(TestCase):
         
         body = await response_create.json()
         self.assertEqual(response_create.status, 201)
-        self.assertEqual(body, {'id': 1,
-                                'login': 'test_user'})
+        self.assertEqual(body, {'user_id': 1,
+                                'login': 'test_user',
+                                'email': 'test@email.com'})
 
     @unittest_run_loop
     async def test_create_user_with_existing_login(self):

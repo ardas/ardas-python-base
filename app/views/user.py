@@ -1,6 +1,6 @@
 import json
 
-from aiohttp import web
+from aiohttp import web, ClientSession
 from sqlalchemy import literal_column, select, exists
 from aiohttp_swagger import *
 
@@ -18,7 +18,7 @@ async def create_user(request: web.Request, body) -> web.Response:
         return web.HTTPConflict(body=json.dumps({'error': f'User with login "{login}" already exist'}), content_type='application/json')
 
     data = await request.app['pg'].fetchrow(user_table.insert().values(**body).returning(literal_column('*')))
-    body['id'] = data['id']
+    body['user_id'] = data['user_id']
     del body['password']
 
     return web.Response(
@@ -38,7 +38,7 @@ async def get_all_users(request: web.Request) -> web.Response:
 async def get_user(request: web.Request) -> web.Response:
     user_id = id_validator(request.match_info['user_id'], 'user')
     user_table = get_model_by_name('user')
-    user_exists = await request.app['pg'].fetchval(select([exists().where(user_table.c.id == user_id)]))
+    user_exists = await request.app['pg'].fetchval(select([exists().where(user_table.c.user_id == user_id)]))
 
     if not user_exists:
         raise web.HTTPNotFound(
@@ -46,7 +46,7 @@ async def get_user(request: web.Request) -> web.Response:
             content_type='application/json')
 
     user = await request.app['pg'].fetchrow(
-        user_table.select().where(user_table.c.id == user_id))
+        user_table.select().where(user_table.c.user_id == user_id))
     
     return web.Response(status=200, content_type='application/json',
                         body=json.dumps(row_to_dict(user_table, user)))
@@ -56,7 +56,7 @@ async def get_user(request: web.Request) -> web.Response:
 async def patch_user(request: web.Request, body) -> web.Response:
     user_id = id_validator(request.match_info['user_id'], 'user')
     user_table = get_model_by_name('user')
-    user_exists = await request.app['pg'].fetchval(select([exists().where(user_table.c.id == user_id)]))
+    user_exists = await request.app['pg'].fetchval(select([exists().where(user_table.c.user_id == user_id)]))
 
     if not user_exists:
         raise web.HTTPNotFound(
@@ -72,9 +72,14 @@ async def patch_user(request: web.Request, body) -> web.Response:
                             body=json.dumps({}))
 
     user = await request.app['pg'].fetchrow(user_table.update().where(
-        user_table.c.id == user_id).values(**body).returning(literal_column('*')))
+        user_table.c.user_id == user_id).values(**body).returning(literal_column('*')))
     
     result = row_to_dict(user_table, user)
 
     return web.Response(status=200, content_type='application/json',
                         body=json.dumps(result))
+
+
+
+
+

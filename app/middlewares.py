@@ -1,7 +1,7 @@
 import json
 
 import jwt
-from jwt.exceptions import ExpiredSignatureError, DecodeError
+from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidAudienceError
 from aiohttp import web
 
 from app.services.serializers import InvalidParameterException
@@ -36,9 +36,9 @@ async def auth_middleware(request, handler):
     except ExpiredSignatureError:
         raise web.HTTPUnauthorized(body=json.dumps({'error': 'Token expired'}),
                                     content_type='application/json')
-    except DecodeError:
+    except (InvalidAudienceError, DecodeError):
         raise web.HTTPUnauthorized(body=json.dumps({'error': 'Invalid token'}),
-                                    content_type='application/json')
+                                   content_type='application/json')
 
     request.auth_user = {'login': data['login'], 'user_id': data['user_id']}
 

@@ -31,6 +31,7 @@ def get_test_config():
     config['DB_NAME'] = 'test_database'
     config['PROD'] = False
     config['HOST'] = None
+    config['TEST_ENV'] = True
     return config
 
 def load_config(file_path):
@@ -70,14 +71,6 @@ class JSONCompileDialect(StrCompileDialect):
 
     def _json_deserializer(self, value):
         return json.loads(value)
-
-
-def get_test_config():
-    config = get_config()
-    config['DB_NAME'] = 'test_database'
-    config['PROD'] = False
-    config['HOST'] = None
-    return config
 
 
 async def connect_to_db(config: dict) -> PG:

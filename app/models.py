@@ -10,18 +10,18 @@ SystemSettings = sa.Table(
 )
 User = sa.Table(
     'user', meta,
-    sa.Column('id', sa.Integer, primary_key=True),
+    sa.Column('user_id', sa.Integer, primary_key=True),
     sa.Column('login', sa.String, nullable=False, unique=True),
     sa.Column('password', sa.String, nullable=False),
     sa.Column('first_name', sa.String, nullable=True),
     sa.Column('last_name', sa.String, nullable=True),
-    sa.Column('email', sa.String, nullable=True)
+    sa.Column('email', sa.String, nullable=False)
 )
 
 Permission = sa.Table(
     'permission', meta,
     sa.Column('id', sa.Integer, primary_key=True),
-    sa.Column('user_id', sa.Integer, sa.ForeignKey('user.id', ondelete="CASCADE"), nullable=False),
+    sa.Column('user_id', sa.Integer, sa.ForeignKey('user.user_id', ondelete="CASCADE"), nullable=False),
     sa.Column('perm_name', sa.String, nullable=False)
 )
 

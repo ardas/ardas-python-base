@@ -11,3 +11,4 @@ marshmallow
 webargs
 psycopg2
 pyjwt
+aio-pika

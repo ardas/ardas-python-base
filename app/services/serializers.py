@@ -72,7 +72,7 @@ class UserSchema(BaseStrictSchema):
     password = fields.String(required=True)
     first_name = fields.String(required=False)
     last_name = fields.String(required=False)
-    email = fields.Email(required=False)
+    email = fields.Email(required=True)
 
     class Meta:
         strict = True
@@ -94,6 +94,18 @@ class PatchUserSchema(BaseStrictSchema):
     class Meta:
         strict = True
 
+class ForgotPasswordSchema(BaseStrictSchema):
+    login = fields.String(required=True)
+
+    class Meta:
+        strict = True
+
+
+class ResetPasswordSchema(BaseStrictSchema):
+    password = fields.String(required=True)
+
+    class Meta:
+        strict = True
 
 class SchemaNotFound(Exception):
     pass
@@ -107,4 +119,6 @@ schemas = {
     'user_schema': UserSchema,
     'login_schema': AuthSchema,
     'patch_user_schema': PatchUserSchema,
+    'forgot_password': ForgotPasswordSchema,
+    'reset_password': ResetPasswordSchema,
 }

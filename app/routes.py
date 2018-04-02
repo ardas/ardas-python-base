@@ -1,11 +1,10 @@
-from .views import get_version, create_user, login, logout, get_all_users, get_user, patch_user
+from .views import get_version, create_user, auth_routes, get_all_users, get_user, patch_user
 
 def setup_routes(app):
     # Auth
-    app.router.add_post('/api/v1/auth/login', login)
-    app.router.add_get('/api/v1/auth/logout', logout)
+    app.router.add_routes(auth_routes)
     # Default
-    app.router.add_get('/api/version', get_version, allow_head=False)
+    app.router.add_get('/api/version', get_version)
     # User
     app.router.add_post('/api/v1/users', create_user)
     app.router.add_get('/api/v1/users', get_all_users)

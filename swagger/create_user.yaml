@@ -48,14 +48,14 @@ responses:
         email:
           type: string
           format: email
-        id:
+        user_id:
           type: integer
       example:
         login: user
         first_name: Black
         last_name: John
         email: johnblack@gmail.com
-        id: 1
+        user_id: 1
   409: 
     description: conflict with the current state of the target resource
     schema:

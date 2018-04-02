@@ -71,6 +71,22 @@ class Migrate(Command):
 
 manager.add_command(Migrate('migrate', app))
 
+class ResetDB(Command):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._commands = [
+            DropDatabase(*args, **kwargs),
+            CreateDatabase(*args, **kwargs),
+            Migrate(*args, **kwargs)
+        ]
+
+    def run(self, app, args):
+        for cm in self._commands:
+            cm.run(app, args)
+
+
+manager.add_command(ResetDB('reset_db', app))
+
 
 if __name__ == '__main__':
     manager.run()
