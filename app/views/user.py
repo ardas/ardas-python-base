@@ -13,8 +13,7 @@ from app.services.serializers import serialize_body, id_validator
 async def create_user(request: web.Request, body) -> web.Response:
     user_table = get_model_by_name('user')
     login = body['login']
-
-    exist = await request.app['pg'].fetchval(select([exists().where(user_table.c.login == login)]))
+    exist = await request.app['pg'].fetch(select([exists().where(user_table.c.login == login)]))
 
     if exist:
         return web.HTTPConflict(body=json.dumps({'error': f'User with login "{login}" already exist'}), content_type='application/json')

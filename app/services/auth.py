@@ -98,7 +98,7 @@ async def set_authorization_cookie(user: dict, timedelta_data: dict, secret_key:
 
     token = jwt.encode(payload=payload,
                        key=secret_key)
-    response.set_cookie(name='AppCoockie',
+    response.set_cookie(name='AppCookie',
                         value=token.decode(),
                         httponly=True,
                         secure=False,
@@ -116,7 +116,7 @@ async def set_authorization_cookie_redis(user: dict, timedelta_data: dict, redis
                'user_id': user['user_id']}
     token = secrets.token_hex()
     await redis.setex(token, payload, max_age)
-    response.set_cookie(name='AppCoockie',
+    response.set_cookie(name='AppCookie',
                         value=token.decode(),
                         httponly=True,
                         secure=False,

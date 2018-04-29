@@ -25,7 +25,7 @@ async def auth_middleware(request, handler):
     if check_public_resources(request.path, request.method):
         return await handler(request)
 
-    token = request.cookies.get('AppCoockie')
+    token = request.cookies.get('AppCookie')
 
     if not token:
         raise web.HTTPForbidden(body=json.dumps({'error': 'Access denied for requested resource'}),
