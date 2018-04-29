@@ -26,6 +26,7 @@ VERIABLES = ['VERSION']
 #     app['config'] = config
 #     return app
 
+
 def get_test_config():
     config = get_config()
     config['DB_NAME'] = 'test_database'
@@ -33,6 +34,7 @@ def get_test_config():
     config['HOST'] = None
     config['TEST_ENV'] = True
     return config
+
 
 def load_config(file_path):
     with open(file_path, 'r') as conf_file:
@@ -65,6 +67,7 @@ def _load_from_env(keys):
 
     return env_config
 
+
 class JSONCompileDialect(StrCompileDialect):
     def _json_serializer(self, value):
         return json.dumps(value)
@@ -81,6 +84,7 @@ async def connect_to_db(config: dict) -> PG:
                   password=config['DB_PASSWORD'],
                   dialect=JSONCompileDialect())
     return pg
+
 
 async def create_database(config):
     conn = await connect_to_postgres(config)

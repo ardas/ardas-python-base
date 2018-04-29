@@ -5,10 +5,10 @@ aio_manager
 pytest-aiohttp
 uvloop
 alembic
-asyncpg
 asyncpgsa
 marshmallow
 webargs
 psycopg2
 pyjwt
 aio-pika
+aioredis

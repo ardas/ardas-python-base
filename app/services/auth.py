@@ -1,4 +1,5 @@
 import json
+import secrets
 
 import sqlalchemy as sa
 from datetime import datetime, timedelta
@@ -7,6 +8,7 @@ from aiohttp_security.abc import AbstractAuthorizationPolicy
 from aiohttp import web
 import jwt
 from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidAudienceError, MissingRequiredClaimError
+from aioredis import Redis
 # from passlib.hash import sha256_crypt
 from app.models import User, Permission
 
@@ -82,7 +84,8 @@ def check_public_resources(path: str, method: str) -> bool:
             return True
     return False
 
-async def set_authorization_coockie(user: dict, timedelta_data: dict, secret_key: str, audience=None):
+
+async def set_authorization_cookie(user: dict, timedelta_data: dict, secret_key: str, audience=None):
     response = web.json_response(data={'status': 'ok'}, status=200)
     max_age = timedelta(**timedelta_data)
     expiration_time = datetime.utcnow() + max_age
@@ -104,6 +107,24 @@ async def set_authorization_coockie(user: dict, timedelta_data: dict, secret_key
                         # expires=expiration_time.isoformat(), 
     )
     return response
+
+
+async def set_authorization_cookie_redis(user: dict, timedelta_data: dict, redis: Redis):
+    response = web.json_response(data={'status': 'ok'}, status=200)
+    max_age = int(timedelta(**timedelta_data).total_seconds())
+    payload = {'login': user['login'],
+               'user_id': user['user_id']}
+    token = secrets.token_hex()
+    await redis.setex(token, payload, max_age)
+    response.set_cookie(name='AppCoockie',
+                        value=token.decode(),
+                        httponly=True,
+                        secure=False,
+                        path='/',
+                        max_age=max_age,
+                        )
+    return response
+
 
 def token_decode(token, secret_key, audience=None):
     try:

@@ -10,7 +10,7 @@ from sqlalchemy import and_, select, exists, literal_column
 from app.models import get_model_by_name, row_to_dict
 from app.services.serializers import serialize_body
 from app.services.email import Email
-from app.services.auth import set_authorization_coockie, token_decode
+from app.services.auth import set_authorization_cookie_redis, token_decode
 
 
 auth_routes = web.RouteTableDef()
@@ -29,7 +29,7 @@ async def login(request: web.Request, body) -> web.Response:
                                    content_type='application/json')
 
     if body['password'] == user['password']:
-        return await set_authorization_coockie(user, {'hours': 24}, request.app['config']['SECRET_KEY'])
+        return await set_authorization_cookie_redis(user, {'hours': 24}, request.app['redis'])
 
     raise web.HTTPUnauthorized(
         body=json.dumps({'error': 'Invalid username / password combination'}), content_type='application/json')
@@ -83,7 +83,7 @@ async def forgot_password(request: web.Request, body) -> web.Response:
     '''
 
     # await request.app.rmq.produce(data, request.app['config']['RMQ_PRODUCER_QUEUE'])
-    await request.app.redis.rpush('email', json.dumps(data))
+    await request.app['redis'].rpush('email', json.dumps(data))
 
     return web.Response(status=200, content_type='application/json', body=json.dumps({'status': 'ok'}))
 
