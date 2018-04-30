@@ -43,7 +43,7 @@ async def logout(request: web.Request) -> web.Response:
     await request.app['redis'].delete(token)
     response.del_cookie(name='AppCookie')
 
-    return respons
+    return response
 
 
 @swagger_path('swagger/restore_password_post.yaml')

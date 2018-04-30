@@ -115,9 +115,9 @@ async def set_authorization_cookie_redis(user: dict, timedelta_data: dict, redis
     payload = {'login': user['login'],
                'user_id': user['user_id']}
     token = secrets.token_hex()
-    await redis.setex(token, payload, max_age)
+    await redis.setex(token, max_age, json.dumps(payload))
     response.set_cookie(name='AppCookie',
-                        value=token.decode(),
+                        value=token,
                         httponly=True,
                         secure=False,
                         path='/',
